@@ -3,9 +3,9 @@
   
     
     <entry>
-      <title><![CDATA[我的一篇文章]]></title>
-      <url>%2F2017%2F02%2F07%2F%E6%88%91%E7%9A%84%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0%2F</url>
-      <content type="text"><![CDATA[试一下好使不 testtest]]></content>
+      <title></title>
+      <url>%2F2017%2F02%2F18%2Frpc%2Frpc_intro%2F</url>
+      <content type="text"><![CDATA[1.什么是RPC​ 一般我们写的程序，都是调用本地计算机的方法，这也称为本地过程调用。而RPC，全称是 Remote Procedure Call，叫做远程过程调用，是一种进程间通讯方式，允许程序员调用另一台主机上的函数。典型的实现，Java的RMI。 ​ RPC屏蔽了网络层，用户只关心函数的调用，网络传输对用户来说是透明的。这样RPC可以使用不同的协议，例如TCP、HTTP。 ​ RPC的工作流程如下图： ​ 一般来说，RPC由以下5个部分组成： client，客户端：调用远程调用方法。 Client stub，客户存根：负责将用户的调用封装成请求；把收到的服务器发来的运行结果接封装程序要的格式 RPCRuntime：负责网络传输。 Server stub，服务器存根：负责将用户的请求接封装，并调用server上特定的函数；把函数的返回值封装成结果。 Server，服务器端：实现RPC函数的接口，并将RPC服务暴露。 ​ ​ 当用户调用一个远程调用时，其实调用了User-stub，User-stub将用户的调用封装成请求，并发送给Server-stub，Server-stub将请求解封装并调用服务器上对应的函数。接着Server-stub将结果封装成Result结构并返回给用用户。 2.RPC的重点1.服务器端如何发布服务2.如何做到透明化远程调用​ 这里包括，消息的编码和解码、序列化、网络通信。 3.总结​ 简要的介绍了RPC是什么，并介绍了RPC的工作原理。接下来的博客里，将实现一个Java平台的RPC框架。]]></content>
     </entry>
 
     
