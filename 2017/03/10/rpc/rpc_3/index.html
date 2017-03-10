@@ -84,58 +84,49 @@
 
 
 
-<meta name="description" content="实现一个RPC框架（五）客户端的实现 2前言​    继续上篇，这节主要讲述RPC的调用过程。调用过程大致流程为：
+<meta name="description" content="实现一个RPC框架（五）客户端的实现 2前言继续上篇，这节主要讲述RPC的调用过程。调用过程大致流程为：
 
 从调用中获取到接口信息，函数信息，并封装成RpcRequest对象。
-
 将RPC对象通过网络发出。
-
 等待服务器处理并返回RpcResponse，从RpcResponse中获取到result。
+
 这小节一共分为两部分：
-
-
 
 RPC调用的异步实现。
 
 RPC调用的同步实现。
-此刻，小">
+此刻，小伙伴们一定会好奇">
 <meta property="og:type" content="article">
-<meta property="og:title" content="实现一个RPC框架（无）客户端的实现 2">
+<meta property="og:title" content="实现一个RPC框架（五）客户端的实现 2">
 <meta property="og:url" content="http://yoursite.com/2017/03/10/rpc/rpc_3/index.html">
 <meta property="og:site_name" content="Trecool的博客">
-<meta property="og:description" content="实现一个RPC框架（五）客户端的实现 2前言​    继续上篇，这节主要讲述RPC的调用过程。调用过程大致流程为：
+<meta property="og:description" content="实现一个RPC框架（五）客户端的实现 2前言继续上篇，这节主要讲述RPC的调用过程。调用过程大致流程为：
 
 从调用中获取到接口信息，函数信息，并封装成RpcRequest对象。
-
 将RPC对象通过网络发出。
-
 等待服务器处理并返回RpcResponse，从RpcResponse中获取到result。
+
 这小节一共分为两部分：
-
-
 
 RPC调用的异步实现。
 
 RPC调用的同步实现。
-此刻，小">
-<meta property="og:updated_time" content="2017-03-10T07:34:03.000Z">
+此刻，小伙伴们一定会好奇">
+<meta property="og:updated_time" content="2017-03-10T07:43:00.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="实现一个RPC框架（无）客户端的实现 2">
-<meta name="twitter:description" content="实现一个RPC框架（五）客户端的实现 2前言​    继续上篇，这节主要讲述RPC的调用过程。调用过程大致流程为：
+<meta name="twitter:title" content="实现一个RPC框架（五）客户端的实现 2">
+<meta name="twitter:description" content="实现一个RPC框架（五）客户端的实现 2前言继续上篇，这节主要讲述RPC的调用过程。调用过程大致流程为：
 
 从调用中获取到接口信息，函数信息，并封装成RpcRequest对象。
-
 将RPC对象通过网络发出。
-
 等待服务器处理并返回RpcResponse，从RpcResponse中获取到result。
+
 这小节一共分为两部分：
-
-
 
 RPC调用的异步实现。
 
 RPC调用的同步实现。
-此刻，小">
+此刻，小伙伴们一定会好奇">
 
 
 
@@ -169,7 +160,7 @@ RPC调用的同步实现。
 
 
 
-  <title> 实现一个RPC框架（无）客户端的实现 2 | Trecool的博客 </title>
+  <title> 实现一个RPC框架（五）客户端的实现 2 | Trecool的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -347,7 +338,7 @@ RPC调用的同步实现。
             
             
               
-                实现一个RPC框架（无）客户端的实现 2
+                实现一个RPC框架（五）客户端的实现 2
               
             
           </h1>
@@ -421,16 +412,13 @@ RPC调用的同步实现。
       
 
       
-        <h1 id="实现一个RPC框架（五）客户端的实现-2"><a href="#实现一个RPC框架（五）客户端的实现-2" class="headerlink" title="实现一个RPC框架（五）客户端的实现 2"></a>实现一个RPC框架（五）客户端的实现 2</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>​    继续上篇，这节主要讲述RPC的调用过程。调用过程大致流程为：</p>
-<ol>
-<li><p>从调用中获取到接口信息，函数信息，并封装成RpcRequest对象。</p>
-</li>
-<li><p>将RPC对象通过网络发出。</p>
-</li>
-<li><p>等待服务器处理并返回RpcResponse，从RpcResponse中获取到result。</p>
+        <h1 id="实现一个RPC框架（五）客户端的实现-2"><a href="#实现一个RPC框架（五）客户端的实现-2" class="headerlink" title="实现一个RPC框架（五）客户端的实现 2"></a>实现一个RPC框架（五）客户端的实现 2</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>继续上篇，这节主要讲述RPC的调用过程。调用过程大致流程为：</p>
+<ul>
+<li>从调用中获取到接口信息，函数信息，并封装成RpcRequest对象。</li>
+<li>将RPC对象通过网络发出。</li>
+<li>等待服务器处理并返回RpcResponse，从RpcResponse中获取到result。</li>
+</ul>
 <p>这小节一共分为两部分：</p>
-</li>
-</ol>
 <ul>
 <li><p>RPC调用的异步实现。</p>
 </li>
@@ -554,7 +542,7 @@ RPC调用的同步实现。
     <div class="post-spread">
       
         <div class="ds-share flat" data-thread-key="2017/03/10/rpc/rpc_3/"
-     data-title="实现一个RPC框架（无）客户端的实现 2"
+     data-title="实现一个RPC框架（五）客户端的实现 2"
      data-content=""
      data-url="http://yoursite.com/2017/03/10/rpc/rpc_3/">
   <div class="ds-share-inline">
@@ -584,7 +572,7 @@ RPC调用的同步实现。
   <div class="comments" id="comments">
     
       <div class="ds-thread" data-thread-key="2017/03/10/rpc/rpc_3/"
-           data-title="实现一个RPC框架（无）客户端的实现 2" data-url="http://yoursite.com/2017/03/10/rpc/rpc_3/">
+           data-title="实现一个RPC框架（五）客户端的实现 2" data-url="http://yoursite.com/2017/03/10/rpc/rpc_3/">
       </div>
     
   </div>
