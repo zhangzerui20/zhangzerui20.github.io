@@ -84,24 +84,49 @@
 
 
 
-<meta name="description" content="1.什么是RPC​    一般我们写的程序，都是调用本地计算机的方法，这也称为本地过程调用。而RPC，全称是 Remote Procedure Call，叫做远程过程调用，是一种进程间通讯方式，允许程序员调用另一台主机上的函数。典型的实现，Java的RMI。
-​    RPC屏蔽了网络层，用户只关心函数的调用，网络传输对用户来说是透明的。这样RPC可以使用不同的协议，例如TCP、HTTP。
-​">
+<meta name="description" content="实现一个RPC框架 （三）从服务器写起我们从服务器端开始写起。服务器端需要实现的功能有以下几点：
+
+服务器端配置
+
+注册RPC服务
+
+rpc请求的处理
+​
+
+
+1. 服务器端配置服务器端配置包括两项：
+1.1. RPC服务实现类的发现​    RPC服务以接口的方式提供给用户使用。在服务器这端需要将实现了RPC服务的类的对象缓存起来，这样当请求到来的时候才知道去调用哪个对象的对应方法。那么如何标注">
 <meta property="og:type" content="article">
-<meta property="og:title" content="实现一个RPC框架">
-<meta property="og:url" content="http://yoursite.com/2017/02/18/rpc/rpc_intro/index.html">
+<meta property="og:title" content="实现一个RPC框架 （三）从服务器写起">
+<meta property="og:url" content="http://yoursite.com/2017/03/10/rpc/rpc_1/index.html">
 <meta property="og:site_name" content="Trecool的博客">
-<meta property="og:description" content="1.什么是RPC​    一般我们写的程序，都是调用本地计算机的方法，这也称为本地过程调用。而RPC，全称是 Remote Procedure Call，叫做远程过程调用，是一种进程间通讯方式，允许程序员调用另一台主机上的函数。典型的实现，Java的RMI。
-​    RPC屏蔽了网络层，用户只关心函数的调用，网络传输对用户来说是透明的。这样RPC可以使用不同的协议，例如TCP、HTTP。
-​">
-<meta property="og:image" content="http://yoursite.com/img/rpc_work.png">
-<meta property="og:updated_time" content="2017-02-17T16:53:21.000Z">
+<meta property="og:description" content="实现一个RPC框架 （三）从服务器写起我们从服务器端开始写起。服务器端需要实现的功能有以下几点：
+
+服务器端配置
+
+注册RPC服务
+
+rpc请求的处理
+​
+
+
+1. 服务器端配置服务器端配置包括两项：
+1.1. RPC服务实现类的发现​    RPC服务以接口的方式提供给用户使用。在服务器这端需要将实现了RPC服务的类的对象缓存起来，这样当请求到来的时候才知道去调用哪个对象的对应方法。那么如何标注">
+<meta property="og:updated_time" content="2017-03-10T07:32:08.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="实现一个RPC框架">
-<meta name="twitter:description" content="1.什么是RPC​    一般我们写的程序，都是调用本地计算机的方法，这也称为本地过程调用。而RPC，全称是 Remote Procedure Call，叫做远程过程调用，是一种进程间通讯方式，允许程序员调用另一台主机上的函数。典型的实现，Java的RMI。
-​    RPC屏蔽了网络层，用户只关心函数的调用，网络传输对用户来说是透明的。这样RPC可以使用不同的协议，例如TCP、HTTP。
-​">
-<meta name="twitter:image" content="http://yoursite.com/img/rpc_work.png">
+<meta name="twitter:title" content="实现一个RPC框架 （三）从服务器写起">
+<meta name="twitter:description" content="实现一个RPC框架 （三）从服务器写起我们从服务器端开始写起。服务器端需要实现的功能有以下几点：
+
+服务器端配置
+
+注册RPC服务
+
+rpc请求的处理
+​
+
+
+1. 服务器端配置服务器端配置包括两项：
+1.1. RPC服务实现类的发现​    RPC服务以接口的方式提供给用户使用。在服务器这端需要将实现了RPC服务的类的对象缓存起来，这样当请求到来的时候才知道去调用哪个对象的对应方法。那么如何标注">
 
 
 
@@ -129,13 +154,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/02/18/rpc/rpc_intro/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/03/10/rpc/rpc_1/"/>
 
 
 
 
 
-  <title> 实现一个RPC框架 | Trecool的博客 </title>
+  <title> 实现一个RPC框架 （三）从服务器写起 | Trecool的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -289,7 +314,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/18/rpc/rpc_intro/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/10/rpc/rpc_1/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Tre Cool">
@@ -313,7 +338,7 @@
             
             
               
-                实现一个RPC框架
+                实现一个RPC框架 （三）从服务器写起
               
             
           </h1>
@@ -326,8 +351,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-18T00:30:19+08:00">
-                2017-02-18
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-10T15:30:19+08:00">
+                2017-03-10
               </time>
             
 
@@ -360,8 +385,8 @@
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2017/02/18/rpc/rpc_intro/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/18/rpc/rpc_intro/" itemprop="commentCount"></span>
+                <a href="/2017/03/10/rpc/rpc_1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/10/rpc/rpc_1/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -387,28 +412,63 @@
       
 
       
-        <h2 id="1-什么是RPC"><a href="#1-什么是RPC" class="headerlink" title="1.什么是RPC"></a>1.什么是RPC</h2><p>​    一般我们写的程序，都是调用本地计算机的方法，这也称为<strong>本地过程调用</strong>。而RPC，全称是 Remote Procedure Call，叫做<strong>远程过程调用</strong>，是一种进程间通讯方式，允许程序员调用另一台主机上的函数。典型的实现，Java的RMI。</p>
-<p>​    RPC屏蔽了网络层，用户只关心函数的调用，网络传输对用户来说是透明的。这样RPC可以使用不同的协议，例如TCP、HTTP。</p>
-<p>​    RPC的工作流程如下图：    </p>
-<p><img src="/img/rpc_work.png" alt="rpc_work"></p>
-<p>​    一般来说，RPC由以下5个部分组成：</p>
+        <h1 id="实现一个RPC框架-（三）从服务器写起"><a href="#实现一个RPC框架-（三）从服务器写起" class="headerlink" title="实现一个RPC框架 （三）从服务器写起"></a>实现一个RPC框架 （三）从服务器写起</h1><p>我们从服务器端开始写起。服务器端需要实现的功能有以下几点：</p>
+<ol>
+<li><p>服务器端配置</p>
+</li>
+<li><p>注册RPC服务</p>
+</li>
+<li><p>rpc请求的处理</p>
+<p>​</p>
+</li>
+</ol>
+<h2 id="1-服务器端配置"><a href="#1-服务器端配置" class="headerlink" title="1. 服务器端配置"></a>1. 服务器端配置</h2><p>服务器端配置包括两项：</p>
+<h3 id="1-1-RPC服务实现类的发现"><a href="#1-1-RPC服务实现类的发现" class="headerlink" title="1.1. RPC服务实现类的发现"></a>1.1. RPC服务实现类的发现</h3><p>​    RPC服务以接口的方式提供给用户使用。在服务器这端需要将实现了RPC服务的类的对象缓存起来，这样当请求到来的时候才知道去调用哪个对象的对应方法。那么如何标注出RPC的实现类，并进行自动装载呢。这里使用注解加spring自动装载。</p>
+<p>​    注解的声明如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE&#125;)				<span class="comment">//表示修饰此注解修饰类</span></div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)		<span class="comment">//表示这个注解在运行时有效</span></div><div class="line"><span class="meta">@Component</span>								<span class="comment">//用于Spring的自动装配</span></div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> RpcService &#123;</div><div class="line">	Class&lt;?&gt; value();					<span class="comment">//注解参数为Class类型</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>​    为什么使用一个Class的注解参数。因为收到的RPC请求中，肯定是发来一个RPC服务的接口名，我们需要用一个Map保存住接口名和实现类。所以用了Class参数来存接口的类型。这样，当Spring获取这个实现类的时候，也可以顺手获取到其实现的接口。</p>
+<h3 id="1-1-装配Beans"><a href="#1-1-装配Beans" class="headerlink" title="1.1. 装配Beans"></a>1.1. 装配Beans</h3><p>​    Server端共包含两个类：</p>
+<p><strong>serviceRegistry类</strong>：用来将RPC服务器注册到Zookeeper节点上，这里需要装配一个zk服务器的地址。</p>
+<p><strong>rpcServer类</strong>：包含启动RPC服务，处理RPC主逻辑的类，需要装配serviceRegistry和服务器的地址。</p>
+<h2 id="2-注册RPC服务"><a href="#2-注册RPC服务" class="headerlink" title="2. 注册RPC服务"></a>2. 注册RPC服务</h2><p>​    将RPC服务器的地址注册在中心服务器(ZK服务器)上，这样，客户端只用访问中心服务器。用Zookeeper来进行分布式管理和节点的负载均衡。</p>
+<p>​    我将这里的功能分为了两点：</p>
+<h3 id="2-1-向zk注册服务器地址"><a href="#2-1-向zk注册服务器地址" class="headerlink" title="2.1. 向zk注册服务器地址"></a>2.1. 向zk注册服务器地址</h3><p>​    想zk注册节点的流程为：</p>
 <ul>
-<li><p>client，客户端：调用远程调用方法。</p>
+<li><p>创建zookeeper实例。</p>
 </li>
-<li><p>Client stub，客户存根：负责将用户的调用封装成请求；把收到的服务器发来的运行结果接封装程序要的格式</p>
-</li>
-<li><p>RPCRuntime：负责网络传输。</p>
-</li>
-<li><p>Server stub，服务器存根：负责将用户的请求接封装，并调用server上特定的函数；把函数的返回值封装成结果。</p>
-</li>
-<li><p>Server，服务器端：实现RPC函数的接口，并将RPC服务暴露。</p>
-<p>​</p>
-<p>​</p>
+<li><p>调用zk的create方法，创建一个临时的节点。</p>
+<p>因为zk中的API基本都是异步的，所以不能当即返回结果，一般需要配合zk的watcher(zk中的回调机制)。举个例子，在连接创建zk对象(既连接zk服务器)的时候：</p>
 </li>
 </ul>
-<p>当用户调用一个远程调用时，其实调用了User-stub，User-stub将用户的调用封装成请求，并发送给Server-stub，Server-stub将请求解封装并调用服务器上对应的函数。接着Server-stub将结果封装成Result结构并返回给用用户。</p>
-<h2 id="2-RPC的重点"><a href="#2-RPC的重点" class="headerlink" title="2.RPC的重点"></a>2.RPC的重点</h2><h3 id="1-服务器端如何发布服务"><a href="#1-服务器端如何发布服务" class="headerlink" title="1.服务器端如何发布服务"></a>1.服务器端如何发布服务</h3><h3 id="2-如何做到透明化远程调用"><a href="#2-如何做到透明化远程调用" class="headerlink" title="2.如何做到透明化远程调用"></a>2.如何做到透明化远程调用</h3><p>​    这里包括，消息的编码和解码、序列化、网络通信。</p>
-<h2 id="3-总结"><a href="#3-总结" class="headerlink" title="3.总结"></a>3.总结</h2><p>​    简要的介绍了RPC是什么，并介绍了RPC的工作原理。接下来的博客里，将实现一个Java平台的RPC框架。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">ZooKeeper zk = <span class="keyword">null</span>;</div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">	<span class="comment">//这里是书中的写法</span></div><div class="line">	<span class="comment">//watcher是zookeeper中的回调机制</span></div><div class="line">	zk = <span class="keyword">new</span> ZooKeeper(registryAddress, Constant.ZK_SESSION_TIMEOUT, <span class="keyword">new</span> Watcher()&#123;</div><div class="line">		<span class="comment">//下面这个函数是，有事件发生时，执行的函数。</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent event)</span> </span>&#123;</div><div class="line">			<span class="keyword">if</span>(event.getState() == Event.KeeperState.SyncConnected)&#123;</div><div class="line">				latch.countDown();</div><div class="line">			&#125;</div><div class="line">		&#125;	</div><div class="line">	&#125;);</div><div class="line">	latch.await();		<span class="comment">//latch初始化为1，这里阻塞等待连接成功</span></div></pre></td></tr></table></figure>
+<p>​    这里使用了watcher配合阑珊，保证了创建完再返回。具体zk的学习分析，后面会再出博客。这里就不赘述了。</p>
+<h3 id="2-2-管理zk节点"><a href="#2-2-管理zk节点" class="headerlink" title="2.2. 管理zk节点"></a>2.2. 管理zk节点</h3><p>​    当有RPC服务器更换地址，或者RPC服务器宕机，需要zk作出及时的响应。通知客户端访问新的地址。所以这里需要在客户端做处理，我先提出来，在客户端部分再详述。</p>
+<h2 id="3-RPC请求处理"><a href="#3-RPC请求处理" class="headerlink" title="3. RPC请求处理"></a>3. RPC请求处理</h2><p>​    在启动RPC服务器之前，需要进行如下的步骤。</p>
+<h3 id="3-1-将RPC服务接口和RPC服务器实现类作为键值对存入Map中"><a href="#3-1-将RPC服务接口和RPC服务器实现类作为键值对存入Map中" class="headerlink" title="3.1 将RPC服务接口和RPC服务器实现类作为键值对存入Map中"></a>3.1 将RPC服务接口和RPC服务器实现类作为键值对存入Map中</h3><p>​    如上所述，为了通过用户发来的RPC服务器接口名来找到实现类，我们必须为RPC接口名和服务实现类做一个缓存。缓存的定义如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//键为接口名，值为对应的实现类</span></div><div class="line"><span class="keyword">private</span> Map&lt;String, Object&gt; handlerMap = <span class="keyword">new</span> HashMap&lt;String, Object&gt;();</div></pre></td></tr></table></figure>
+<p>​    当Spring装配完所有的Bean之后，通过我们的RpcService，可以找到所有的RPC服务实现类和其对应的接口名。那么，我们现在需要在所有的bean装配完的时候，得到ApplicationContext，并从中获取到已经被实例化并初始化的RpcService Bean。</p>
+<p>​    Spring装配Bean的过程如下：</p>
+<ol>
+<li>实例化;  </li>
+<li>设置属性值;  </li>
+<li>如果实现了BeanNameAware接口,调用setBeanName设置Bean的ID或者Name;  </li>
+<li>如果实现BeanFactoryAware接口,调用setBeanFactory 设置BeanFactory;  </li>
+<li>如果实现ApplicationContextAware,调用setApplicationContext设置ApplicationContext  </li>
+<li>调用BeanPostProcessor的预先初始化方法;  </li>
+<li>调用InitializingBean的afterPropertiesSet()方法;  </li>
+<li>调用定制init-method方法；  </li>
+<li>调用BeanPostProcessor的后初始化方法;  </li>
+</ol>
+<p>​    因为我们需要获得applicationContext，所以在这里我们实现ApplicationContextAware接口，实现它的setApplicationContext方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setApplicationContext</span><span class="params">(ApplicationContext ctx)</span> <span class="keyword">throws</span> BeansException </span>&#123;</div><div class="line">	<span class="comment">//这里得到所有带注解的bean</span></div><div class="line">	Map&lt;String, Object&gt; serviceBeanMap = ctx.getBeansWithAnnotation(RpcService.class);</div><div class="line">	<span class="keyword">if</span>(!serviceBeanMap.isEmpty())&#123;</div><div class="line">		<span class="keyword">for</span>(Object bean : serviceBeanMap.values())&#123;</div><div class="line">			String interfaceName = bean.getClass().getAnnotation(RpcService.class).value().getName();</div><div class="line">			handlerMap.put(interfaceName, bean);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>​    在这里，通过函数给我们提供的Application参数，可以获得所有的带有RpcService注解的类，并得到其注解参数中的接口类型。将接口名的字符串和对应的实现类存入到Map中。</p>
+<h3 id="3-2-启动RPC服务"><a href="#3-2-启动RPC服务" class="headerlink" title="3.2 启动RPC服务"></a>3.2 启动RPC服务</h3><p>​    当所有的bean装配完成的时候，我们需要启动一个TCP服务器，用来监听RPC请求。我们为服务器类实现了InitializingBean接口，并实现了其中的afterPropertiesSet()，在这里方法中，启动服务。</p>
+<p>​    启动Netty服务器，设置Encoder和Decoder，设置处理RPC请求的Handler，然后将本Server地址注册到zk服务器上。启动Server的代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">EventLoopGroup bossGroup = <span class="keyword">new</span> NioEventLoopGroup(<span class="number">1</span>);			<span class="comment">//负责监听的线程组</span></div><div class="line">EventLoopGroup workerGroup = <span class="keyword">new</span> NioEventLoopGroup();		<span class="comment">//负责io的线程组</span></div><div class="line"><span class="keyword">try</span>&#123;</div><div class="line">	ServerBootstrap serverBootstrap = <span class="keyword">new</span> ServerBootstrap();</div><div class="line">	serverBootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(<span class="keyword">new</span> ChannelInitializer&lt;SocketChannel&gt;() &#123;					<span class="comment">//设置channel和初始化的Handler</span></div><div class="line">	</div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(SocketChannel channel)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">			channel.pipeline()</div><div class="line">				.addLast(<span class="keyword">new</span> RpcEncoder(RpcResponse.class))</div><div class="line">				.addLast(<span class="keyword">new</span> RpcDecoder(RpcRequest.class))</div><div class="line">				.addLast(<span class="keyword">new</span> RpcHandler(handlerMap));</div><div class="line">		&#125;<span class="comment">//添加了 解码、编码、处理逻辑的handler</span></div><div class="line">		</div><div class="line">	&#125;)</div><div class="line">	.option(ChannelOption.SO_BACKLOG, <span class="number">128</span>)</div><div class="line">	.childOption(ChannelOption.SO_KEEPALIVE, <span class="keyword">true</span>);</div><div class="line">	</div><div class="line">	String[] address = serverAddress.split(<span class="string">":"</span>);</div><div class="line">	<span class="keyword">int</span> inetPort = Integer.parseInt(address[<span class="number">1</span>]);</div><div class="line">	ChannelFuture future = serverBootstrap.bind(inetPort).sync();</div><div class="line">        	<span class="comment">//ChannelFuture类似于JDK的并发包中的future，可以从ChannelFuture中获取本次执行的结果。</span></div></pre></td></tr></table></figure>
+<p>​    描述一下Netty启动服务器的原理。</p>
+<p>​    首先创建的两个EventLoopGroup，是两个线程组。其中bossGroup是Accepter线程组，负责处理客户端的TCP连接，workerGroup则负责对每一个客户连接的IO操作。因为只服务只监听了一个端口，在这里将bossGroup的线程数设置为1。</p>
+<p>​    接着为服务器设置了解码和编码、处理逻辑的handler。</p>
+<p>​    服务器端的讲解到此为止。下一章会为大家讲述 客户端的基本配置和实现。</p>
 
       
     </div>
@@ -445,14 +505,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2017/02/19/rpc/rpc_fram/" rel="next" title="写一个RPC框架-总体架构">
+                <i class="fa fa-chevron-left"></i> 写一个RPC框架-总体架构
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/02/19/rpc/rpc_fram/" rel="prev" title="写一个RPC框架-总体架构">
-                写一个RPC框架-总体架构 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/03/10/rpc/rpc_2/" rel="prev" title="实现一个RPC框架（四）客户端的实现 1">
+                实现一个RPC框架（四）客户端的实现 1 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -468,10 +532,10 @@
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2017/02/18/rpc/rpc_intro/"
-     data-title="实现一个RPC框架"
+        <div class="ds-share flat" data-thread-key="2017/03/10/rpc/rpc_1/"
+     data-title="实现一个RPC框架 （三）从服务器写起"
      data-content=""
-     data-url="http://yoursite.com/2017/02/18/rpc/rpc_intro/">
+     data-url="http://yoursite.com/2017/03/10/rpc/rpc_1/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -498,8 +562,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/02/18/rpc/rpc_intro/"
-           data-title="实现一个RPC框架" data-url="http://yoursite.com/2017/02/18/rpc/rpc_intro/">
+      <div class="ds-thread" data-thread-key="2017/03/10/rpc/rpc_1/"
+           data-title="实现一个RPC框架 （三）从服务器写起" data-url="http://yoursite.com/2017/03/10/rpc/rpc_1/">
       </div>
     
   </div>
@@ -639,7 +703,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-什么是RPC"><span class="nav-number">1.</span> <span class="nav-text">1.什么是RPC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-RPC的重点"><span class="nav-number">2.</span> <span class="nav-text">2.RPC的重点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-服务器端如何发布服务"><span class="nav-number">2.1.</span> <span class="nav-text">1.服务器端如何发布服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-如何做到透明化远程调用"><span class="nav-number">2.2.</span> <span class="nav-text">2.如何做到透明化远程调用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-总结"><span class="nav-number">3.</span> <span class="nav-text">3.总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#实现一个RPC框架-（三）从服务器写起"><span class="nav-number">1.</span> <span class="nav-text">实现一个RPC框架 （三）从服务器写起</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-服务器端配置"><span class="nav-number">1.1.</span> <span class="nav-text">1. 服务器端配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-RPC服务实现类的发现"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1. RPC服务实现类的发现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-装配Beans"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.1. 装配Beans</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-注册RPC服务"><span class="nav-number">1.2.</span> <span class="nav-text">2. 注册RPC服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-向zk注册服务器地址"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1. 向zk注册服务器地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-管理zk节点"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2. 管理zk节点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-RPC请求处理"><span class="nav-number">1.3.</span> <span class="nav-text">3. RPC请求处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-将RPC服务接口和RPC服务器实现类作为键值对存入Map中"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 将RPC服务接口和RPC服务器实现类作为键值对存入Map中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-启动RPC服务"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 启动RPC服务</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
